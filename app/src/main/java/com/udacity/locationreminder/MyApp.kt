@@ -7,6 +7,7 @@ import com.udacity.locationreminder.locationreminders.data.local.LocalDB
 import com.udacity.locationreminder.locationreminders.data.local.RemindersLocalRepository
 import com.udacity.locationreminder.locationreminders.reminderslist.RemindersListViewModel
 import com.udacity.locationreminder.locationreminders.savereminder.SaveReminderViewModel
+import com.udacity.locationreminder.utils.createChannel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
@@ -45,5 +46,7 @@ class MyApp : Application() {
             androidContext(this@MyApp)
             modules(listOf(myModule))
         }
+
+        createChannel(this, getString(R.string.channel_name), getString(R.string.notification_channel_description))
     }
 }

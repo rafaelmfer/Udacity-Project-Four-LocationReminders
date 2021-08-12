@@ -21,6 +21,8 @@
             android:layout_height="wrap_content"
             android:hint="@string/reminder_title"
             android:text="@={viewModel.reminderTitle}"
+            android:textColor="@color/black"
+            android:textColorHint="@android:color/darker_gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -33,6 +35,8 @@
             android:hint="@string/reminder_desc"
             android:lines="10"
             android:text="@={viewModel.reminderDescription}"
+            android:textColor="@color/black"
+            android:textColorHint="@android:color/darker_gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/reminderTitle" />
@@ -43,12 +47,11 @@
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
-            android:drawableStart="@drawable/ic_location"
-            android:drawableLeft="@drawable/ic_location"
             android:focusable="true"
             android:gravity="center_vertical"
             android:text="@string/reminder_location"
             android:textColor="@color/black"
+            app:drawableStartCompat="@drawable/ic_location"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/reminderDescription" />
 

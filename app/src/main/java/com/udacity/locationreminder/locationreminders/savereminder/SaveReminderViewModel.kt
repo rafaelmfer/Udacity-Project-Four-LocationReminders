@@ -11,15 +11,17 @@ import com.udacity.locationreminder.locationreminders.data.ReminderDataSource
 import com.udacity.locationreminder.locationreminders.data.dto.ReminderDTO
 import com.udacity.locationreminder.locationreminders.reminderslist.ReminderDataItem
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSource) : BaseViewModel(app) {
 
+    private val selectedPOI = MutableLiveData<PointOfInterest>()
     val reminderTitle = MutableLiveData<String>()
     val reminderDescription = MutableLiveData<String>()
     val reminderSelectedLocationStr = MutableLiveData<String>()
-    val selectedPOI = MutableLiveData<PointOfInterest>()
     val latitude = MutableLiveData<Double>()
     val longitude = MutableLiveData<Double>()
+    val currentId = MutableLiveData<String>()
 
     /**
      * Clear the live data objects to start fresh next time the view model gets called
@@ -31,6 +33,7 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
         selectedPOI.value = null
         latitude.value = null
         longitude.value = null
+        currentId.value = null
     }
 
     /**
@@ -58,6 +61,7 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
                     reminderData.id
                 )
             )
+            currentId.value = reminderData.id
             showLoading.value = false
             showToast.value = app.getString(R.string.reminder_saved)
             navigationCommand.value = NavigationCommand.Back
@@ -83,5 +87,22 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
             return false
         }
         return true
+    }
+
+    fun getReminderObject(): ReminderDataItem {
+        val title = reminderTitle.value
+        val description = reminderDescription.value
+        val location = reminderSelectedLocationStr.value
+        val latitude = latitude.value
+        val longitude = longitude.value
+
+        return ReminderDataItem(
+            title,
+            description,
+            location,
+            latitude,
+            longitude,
+            currentId.value ?: UUID.randomUUID().toString()
+        )
     }
 }
