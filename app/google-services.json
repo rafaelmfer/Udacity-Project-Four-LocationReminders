@@ -14,13 +14,42 @@
       },
       "oauth_client": [
         {
-          "client_id": "591494705740-jfass04md59o7ig8vbptbt4dt9s0tt9d.apps.googleusercontent.com",
+          "client_id": "591494705740-3ei4dadoj6sj0cfr99000p3mc0qp660r.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.udacity.locationreminder",
-            "certificate_hash": "70498b9d5d6b1c4d69adef0dcf4af793d3a0eac0"
+            "certificate_hash": "06888d19dc8521a5740776153447b7a24cd546fe"
           }
         },
+        {
+          "client_id": "591494705740-h2tdlb7a4ldkuhtcljrpn3s9c1ki3sj8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZaWFXQFhg3TP4G1HSuK5dxLIYCW8920Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "591494705740-h2tdlb7a4ldkuhtcljrpn3s9c1ki3sj8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:591494705740:android:376f6f2dc3b2426df87ae9",
+        "android_client_info": {
+          "package_name": "com.udacity.project4"
+        }
+      },
+      "oauth_client": [
         {
           "client_id": "591494705740-h2tdlb7a4ldkuhtcljrpn3s9c1ki3sj8.apps.googleusercontent.com",
           "client_type": 3

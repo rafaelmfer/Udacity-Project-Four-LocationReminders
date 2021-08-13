@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.udacity.locationreminder.locationreminders.reminderslist.RemindersListViewModel" />
+            type="com.udacity.project4.locationreminders.reminderslist.RemindersListViewModel" />
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -29,7 +29,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:listitem="@layout/it_reminder" />
 
             <TextView
                 android:id="@+id/noDataTextView"
@@ -61,6 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_normal"
+                android:contentDescription="@null"
                 android:src="@drawable/ic_add"
                 app:fabSize="normal"
                 app:layout_anchor="@id/remindersRecyclerView"
