@@ -43,6 +43,7 @@ import org.koin.dsl.module
 import org.koin.test.KoinTest
 import org.koin.test.get
 
+
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 //END TO END test to black box test the app
@@ -129,7 +130,7 @@ class RemindersActivityTest : KoinTest {
     }
 
     @Test
-    fun addReminder_verifyNewItemInTheList() {
+    fun addingAReminder_andStartReminderDescriptionActivity() {
         val typingTitle = "Title espresso"
         val typingDescription = "Description espresso"
         val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
@@ -168,6 +169,13 @@ class RemindersActivityTest : KoinTest {
         onView(withText(typingDescription)).check(matches(isDisplayed()))
         onView(withText(selectedLocation)).check(matches(isDisplayed()))
 
+        // Click on that item
+        onView(withText(typingTitle)).perform(ViewActions.click())
+
+        // Verify detail screen is correct!
+        onView(withText(typingTitle)).check(matches(isDisplayed()))
+        onView(withText(typingDescription)).check(matches(isDisplayed()))
+
         // Make sure the activity is closed before resetting the db:
         activityScenario.close()
     }
@@ -184,7 +192,7 @@ class RemindersActivityTest : KoinTest {
         onView(withId(R.id.addReminderFAB)).perform(ViewActions.click())
 
         // Set location manually
-        viewModel.selectedPOI.postValue(PointOfInterest(LatLng(48.859605453592486, 2.294072402754437), null, "Eiffel Tower"))
+        viewModel.selectedPOI.postValue(PointOfInterest(LatLng(54.67575865, 2.75759986), "", "Somewhere"))
 
         // Typing description
         onView(withId(R.id.reminderDescription)).perform(ViewActions.typeText("Description espresso"))
@@ -213,7 +221,7 @@ class RemindersActivityTest : KoinTest {
         onView(withId(R.id.addReminderFAB)).perform(ViewActions.click())
 
         // Set location manually
-        viewModel.selectedPOI.postValue(PointOfInterest(LatLng(48.859605453592486, 2.294072402754437), null, "Eiffel Tower"))
+        viewModel.selectedPOI.postValue(PointOfInterest(LatLng(54.67575865, 2.75759986), "", "Somewhere"))
 
         // Typing description
         onView(withId(R.id.reminderTitle)).perform(ViewActions.typeText("Title espresso"))

@@ -12,6 +12,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -32,7 +33,7 @@ class RemindersLocalRepositoryTest {
     //Class under test
     private lateinit var remindersLocalRepository: RemindersLocalRepository
 
-    private val reminder = ReminderDTO("title", "description", "location", 123.456, 654.321)
+    private val reminder = ReminderDTO("title", "description", "location", 123.456, 654.321, "1234")
 
     @Before
     fun setup() {
@@ -85,5 +86,18 @@ class RemindersLocalRepositoryTest {
 
         MatcherAssert.assertThat(reminderList.data.size, `is`(1))
         MatcherAssert.assertThat(newReminderList.data.size, `is`(0))
+    }
+
+    @Test
+    fun getReminderByNonExistingId_shouldReturnError() = runBlocking {
+        // WHEN
+        val result = remindersLocalRepository.getReminder("1")
+
+        // THEN
+        MatcherAssert.assertThat(result, `is`(not(Result.Success(reminder))))
+
+        result as Result.Error
+
+        MatcherAssert.assertThat(result.message, `is`("Reminder not found!"))
     }
 }
