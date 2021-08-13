@@ -16,6 +16,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -37,6 +38,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.udacity.project4.BuildConfig
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
+import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.databinding.FragmentSelectLocationBinding
 import com.udacity.project4.locationreminders.savereminder.SaveReminderFragment.Companion.REQUEST_TURN_DEVICE_LOCATION_ON
 import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
@@ -61,7 +63,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
     private val fusedLocationClient: FusedLocationProviderClient? by lazy { context?.let { LocationServices.getFusedLocationProviderClient(it) } }
 
-    private var reminderSelectedLocationStr = ""
+    private var selectedLocationStr = ""
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
     private var marker: Marker? = null
@@ -69,7 +71,6 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
     // Ref: https://developer.android.com/training/location/retrieve-current
     private var retrieveLocationRetry = 0
-
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -143,6 +144,14 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
 
+        if (saveReminderViewModel.selectedPOI.value != null) {
+            selectedPOI = saveReminderViewModel.selectedPOI.value
+            marker = map.addMarker(
+                MarkerOptions()
+                    .position(saveReminderViewModel.selectedPOI.value!!.latLng)
+                    .title(saveReminderViewModel.selectedPOI.value!!.name)
+            )
+        }
         // Guaruja - SP - Brazil - MY HOUSE
         val latitude = -23.994999483822994
         val longitude = -46.25498303770009
@@ -182,16 +191,10 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                 updateCurrentPoi(PointOfInterest(latLng, "", address))
                 latitude = latLng.latitude
                 longitude = latLng.longitude
-                reminderSelectedLocationStr = address
+                selectedLocationStr = address
             }
         }
     }
-
-//    private fun setPoiClick(map: GoogleMap) {
-//        map.setOnPoiClickListener { poi ->
-//            updateCurrentPoi(poi)
-//        }
-//    }
 
     private fun updateCurrentPoi(poi: PointOfInterest) {
         marker?.remove()
@@ -202,7 +205,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         )
         marker?.showInfoWindow()
         selectedPOI = poi
-        reminderSelectedLocationStr = poi.name
+        selectedLocationStr = poi.name
     }
 
     private fun setPoiClick(map: GoogleMap) {
@@ -214,24 +217,9 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                     .title(poi.name)
             )
             poiMarker?.showInfoWindow()
-            reminderSelectedLocationStr = poi.name
+            selectedLocationStr = poi.name
             latitude = poi.latLng.latitude
             longitude = poi.latLng.longitude
-        }
-    }
-
-    private fun setOnLongClick(map: GoogleMap) {
-        map.setOnMapLongClickListener { latLng ->
-            map.clear()
-            map.addMarker(
-                MarkerOptions()
-                    .position(latLng)
-                    .title(getString(R.string.dropped_pin))
-            )
-
-            latitude = latLng.latitude
-            longitude = latLng.longitude
-            reminderSelectedLocationStr = getString(R.string.dropped_pin)
         }
     }
 
@@ -264,7 +252,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     }
 
     private fun isLocationPermissionGranted(): Boolean {
-        return ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        return ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun enableMyLocation(needResolve: Boolean = true) {
@@ -336,12 +324,17 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
     private fun bindClickListenerSaveLocation() {
         binding.mbtSaveLocation.setOnClickListener {
-            if (latitude != 0.0 && longitude != 0.0 && reminderSelectedLocationStr.isNotBlank()) {
-                saveReminderViewModel.onSaveLocation(selectedPOI, latitude, longitude, reminderSelectedLocationStr)
+            if (latitude != 0.0 && longitude != 0.0 && selectedLocationStr.isNotBlank()) {
+                saveReminderViewModel.run {
+                    latitude.postValue(marker?.position?.latitude)
+                    longitude.postValue(marker?.position?.longitude)
+                    selectedPOI.postValue(selectedPOI.value)
+                    reminderSelectedLocationStr.postValue(selectedLocationStr)
+                    navigationCommand.postValue(NavigationCommand.Back)
+                }
             } else {
                 saveReminderViewModel.showSnackBar.postValue(getString(R.string.err_select_location))
             }
-
         }
     }
 }

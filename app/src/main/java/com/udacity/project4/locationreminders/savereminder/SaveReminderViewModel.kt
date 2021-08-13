@@ -10,12 +10,9 @@ import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.locationreminders.data.ReminderDataSource
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
-import com.udacity.project4.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
 
 class SaveReminderViewModel(val app: Application, private val dataSource: ReminderDataSource) : BaseViewModel(app) {
-
-    val addGeoFencingRequest = SingleLiveEvent<ReminderDataItem>()
 
     val selectedPOI = MutableLiveData<PointOfInterest>()
     val reminderTitle = MutableLiveData<String>()
@@ -24,22 +21,10 @@ class SaveReminderViewModel(val app: Application, private val dataSource: Remind
     val latitude = MutableLiveData<Double>()
     val longitude = MutableLiveData<Double>()
 
-
-    val reminder: ReminderDataItem
-        get() {
-            val title = reminderTitle.value
-            val description = reminderDescription.value
-            val location = reminderSelectedLocationStr.value
-            val latitude = latitude.value
-            val longitude = longitude.value
-
-            return ReminderDataItem(title, description, location, latitude, longitude)
-        }
-
     /**
      * Validate the entered data and show error to the user if there's any invalid data
      */
-    private fun validateEnteredData(reminderData: ReminderDataItem): Boolean {
+    fun validateEnteredData(reminderData: ReminderDataItem): Boolean {
         if (reminderData.title.isNullOrEmpty()) {
             showSnackBarInt.value = R.string.err_enter_title
             return false
@@ -55,25 +40,6 @@ class SaveReminderViewModel(val app: Application, private val dataSource: Remind
             return false
         }
         return true
-    }
-
-    fun onAddGeofencingSucceeded(reminderData: ReminderDataItem) {
-        showSnackBarInt.postValue(R.string.geofence_added)
-        saveReminder(reminderData)
-    }
-
-    fun onAddGeofencingFailed() {
-        showSnackBarInt.postValue(R.string.geofences_not_added)
-    }
-
-    fun onSaveLocation(poi: PointOfInterest?, latitude: Double, longitude: Double, location: String) {
-        poi?.let {
-            selectedPOI.postValue(it)
-        }
-        this.latitude.postValue(latitude)
-        this.longitude.postValue(longitude)
-        reminderSelectedLocationStr.postValue(location)
-        navigationCommand.postValue(NavigationCommand.Back)
     }
 
     /**
@@ -94,7 +60,6 @@ class SaveReminderViewModel(val app: Application, private val dataSource: Remind
     fun validateAndSaveReminder(reminderData: ReminderDataItem) {
         if (validateEnteredData(reminderData)) {
             saveReminder(reminderData)
-            addGeoFencingRequest.postValue(reminder)
         }
     }
 
