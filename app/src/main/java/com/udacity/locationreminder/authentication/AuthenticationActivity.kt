@@ -77,6 +77,7 @@ class AuthenticationActivity : AppCompatActivity() {
             AuthUI.getInstance()
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)
+                .setLogo(R.drawable.map) // Set logo drawable
                 .setTheme(R.style.Theme_LocationReminder)
                 .build()
         )

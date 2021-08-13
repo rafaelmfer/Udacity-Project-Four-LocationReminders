@@ -12,24 +12,24 @@ abstract class BaseFragment : Fragment() {
     /**
      * Every fragment has to have an instance of a view model that extends from the BaseViewModel
      */
-    abstract val _viewModel: BaseViewModel
+    abstract val saveReminderViewModel: BaseViewModel
 
     override fun onStart() {
         super.onStart()
-        _viewModel.showErrorMessage.observe(this, {
+        saveReminderViewModel.showErrorMessage.observe(this, {
             Toast.makeText(activity, it, Toast.LENGTH_LONG).show()
         })
-        _viewModel.showToast.observe(this, {
+        saveReminderViewModel.showToast.observe(this, {
             Toast.makeText(activity, it, Toast.LENGTH_LONG).show()
         })
-        _viewModel.showSnackBar.observe(this, {
+        saveReminderViewModel.showSnackBar.observe(this, {
             Snackbar.make(this.requireView(), it, Snackbar.LENGTH_LONG).show()
         })
-        _viewModel.showSnackBarInt.observe(this, {
+        saveReminderViewModel.showSnackBarInt.observe(this, {
             Snackbar.make(this.requireView(), getString(it), Snackbar.LENGTH_LONG).show()
         })
 
-        _viewModel.navigationCommand.observe(this, { command ->
+        saveReminderViewModel.navigationCommand.observe(this, { command ->
             when (command) {
                 is NavigationCommand.To -> findNavController().navigate(command.directions)
                 is NavigationCommand.Back -> findNavController().popBackStack()

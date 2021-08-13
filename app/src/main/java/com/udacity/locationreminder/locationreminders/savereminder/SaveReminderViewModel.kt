@@ -23,6 +23,23 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
     val longitude = MutableLiveData<Double>()
     val currentId = MutableLiveData<String>()
 
+    fun reminderDataItem(): ReminderDataItem {
+        val title = reminderTitle.value
+        val description = reminderDescription.value
+        val location = reminderSelectedLocationStr.value
+        val latitude = latitude.value
+        val longitude = longitude.value
+
+        return ReminderDataItem(
+            title,
+            description,
+            location,
+            latitude,
+            longitude,
+            currentId.value ?: UUID.randomUUID().toString()
+        )
+    }
+
     /**
      * Clear the live data objects to start fresh next time the view model gets called
      */
@@ -71,7 +88,7 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
     /**
      * Validate the entered data and show error to the user if there's any invalid data
      */
-    fun validateEnteredData(reminderData: ReminderDataItem): Boolean {
+    private fun validateEnteredData(reminderData: ReminderDataItem): Boolean {
         if (reminderData.title.isNullOrEmpty()) {
             showSnackBarInt.value = R.string.err_enter_title
             return false
@@ -87,22 +104,5 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
             return false
         }
         return true
-    }
-
-    fun getReminderObject(): ReminderDataItem {
-        val title = reminderTitle.value
-        val description = reminderDescription.value
-        val location = reminderSelectedLocationStr.value
-        val latitude = latitude.value
-        val longitude = longitude.value
-
-        return ReminderDataItem(
-            title,
-            description,
-            location,
-            latitude,
-            longitude,
-            currentId.value ?: UUID.randomUUID().toString()
-        )
     }
 }

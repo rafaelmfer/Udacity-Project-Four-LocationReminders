@@ -44,7 +44,7 @@ class SaveReminderFragment : BaseFragment() {
     }
 
     //Get the view model this time as a single to be shared with the another fragment
-    override val _viewModel: SaveReminderViewModel by inject()
+    override val saveReminderViewModel: SaveReminderViewModel by inject()
     private lateinit var binding: FragmentSaveReminderBinding
 
     private lateinit var geofencingClient: GeofencingClient
@@ -63,7 +63,7 @@ class SaveReminderFragment : BaseFragment() {
 
         setDisplayHomeAsUpEnabled(true)
 
-        binding.viewModel = _viewModel
+        binding.viewModel = saveReminderViewModel
 
         geofencingClient = LocationServices.getGeofencingClient(requireActivity())
         binding.saveReminder.setOnClickListener {
@@ -74,7 +74,7 @@ class SaveReminderFragment : BaseFragment() {
             requestForegroundAndBackgroundLocationPermissions()
         }
 
-        _viewModel.currentId.observe(viewLifecycleOwner, {
+        saveReminderViewModel.currentId.observe(viewLifecycleOwner, {
             it?.let {
                 checkPermissionsAndStartGeofencing()
             }
@@ -87,33 +87,30 @@ class SaveReminderFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = this
         binding.selectLocation.setOnClickListener {
-            _viewModel.navigationCommand.value =
+            saveReminderViewModel.navigationCommand.value =
                 NavigationCommand.To(SaveReminderFragmentDirections.actionSaveReminderFragmentToSelectLocationFragment())
         }
 
         binding.saveReminder.setOnClickListener {
-            val title = _viewModel.reminderTitle.value
-            val description = _viewModel.reminderDescription.value
-            val location = _viewModel.reminderSelectedLocationStr.value
-            val latitude = _viewModel.latitude.value
-            val longitude = _viewModel.longitude.value
+            val title = saveReminderViewModel.reminderTitle.value
+            val description = saveReminderViewModel.reminderDescription.value
+            val location = saveReminderViewModel.reminderSelectedLocationStr.value
+            val latitude = saveReminderViewModel.latitude.value
+            val longitude = saveReminderViewModel.longitude.value
 
-//            TODO: use the user entered reminder details to:
-//             1) add a geofencing request
-//             2) save the reminder to the local db
             val reminderData = ReminderDataItem(title, description, location, latitude, longitude)
-            _viewModel.validateAndSaveReminder(reminderData)
+            saveReminderViewModel.validateAndSaveReminder(reminderData)
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         //make sure to clear the view model after destroy, as it's a single view model.
-        _viewModel.onClear()
+        saveReminderViewModel.onClear()
     }
 
     private fun saveNewReminder() {
-        _viewModel.validateAndSaveReminder(_viewModel.getReminderObject())
+        saveReminderViewModel.validateAndSaveReminder(saveReminderViewModel.reminderDataItem())
     }
 
     @TargetApi(29)
@@ -182,7 +179,7 @@ class SaveReminderFragment : BaseFragment() {
 
         locationSettingsResponseTask.addOnCompleteListener {
             if (it.isSuccessful) {
-                addGeofenceClue(_viewModel.getReminderObject())
+                addGeofenceClue(saveReminderViewModel.reminderDataItem())
             }
         }
     }
@@ -207,15 +204,15 @@ class SaveReminderFragment : BaseFragment() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             geofencingClient.addGeofences(geofencingRequest, geofencePendingIntent).run {
                 addOnSuccessListener {
-                    _viewModel.showSnackBar.postValue(activity?.application?.getString(R.string.geofence_added))
-                    _viewModel.navigationCommand.value = NavigationCommand.Back
+                    saveReminderViewModel.showSnackBar.postValue(activity?.application?.getString(R.string.geofence_added))
+                    saveReminderViewModel.navigationCommand.value = NavigationCommand.Back
                 }
                 addOnFailureListener {
-                    _viewModel.showSnackBar.postValue(getString(R.string.geofences_not_added))
+                    saveReminderViewModel.showSnackBar.postValue(getString(R.string.geofences_not_added))
                 }
             }
         } else {
-            _viewModel.showSnackBar.postValue(getString(R.string.permission_required))
+            saveReminderViewModel.showSnackBar.postValue(getString(R.string.permission_required))
             return
         }
     }

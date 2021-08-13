@@ -10,8 +10,16 @@ import com.udacity.locationreminder.locationreminders.data.dto.Result
 import kotlinx.coroutines.launch
 
 class RemindersListViewModel(app: Application, private val dataSource: ReminderDataSource) : BaseViewModel(app) {
+
     // list that holds the reminder data to be displayed on the UI
     val remindersList = MutableLiveData<List<ReminderDataItem>>()
+
+    /**
+     * Inform the user that there's not any data if the remindersList is empty
+     */
+    private fun invalidateShowNoData() {
+        showNoData.value = remindersList.value.isNullOrEmpty()
+    }
 
     /**
      * Get all the reminders from the DataSource and add them to the remindersList to be shown on the UI,
@@ -25,7 +33,7 @@ class RemindersListViewModel(app: Application, private val dataSource: ReminderD
             showLoading.postValue(false)
             when (result) {
                 is Result.Success<*> -> {
-                    val dataList = ArrayList<ReminderDataItem>()
+                    val dataList = mutableListOf<ReminderDataItem>()
                     dataList.addAll((result.data as List<ReminderDTO>).map { reminder ->
                         //map the reminder data from the DB to the be ready to be displayed on the UI
                         ReminderDataItem(
@@ -39,19 +47,10 @@ class RemindersListViewModel(app: Application, private val dataSource: ReminderD
                     })
                     remindersList.value = dataList
                 }
-                is Result.Error ->
-                    showSnackBar.value = result.message
+                is Result.Error -> showSnackBar.value = result.message
             }
-
             //check if no data has to be shown
             invalidateShowNoData()
         }
-    }
-
-    /**
-     * Inform the user that there's not any data if the remindersList is empty
-     */
-    private fun invalidateShowNoData() {
-        showNoData.value = remindersList.value == null || remindersList.value!!.isEmpty()
     }
 }
