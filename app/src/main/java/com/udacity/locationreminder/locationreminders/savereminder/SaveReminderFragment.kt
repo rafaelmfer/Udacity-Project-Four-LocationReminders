@@ -28,6 +28,7 @@ import com.udacity.locationreminder.base.BaseFragment
 import com.udacity.locationreminder.base.NavigationCommand
 import com.udacity.locationreminder.databinding.FragmentSaveReminderBinding
 import com.udacity.locationreminder.locationreminders.geofence.GeofenceBroadcastReceiver
+import com.udacity.locationreminder.locationreminders.geofence.GeofenceTransitionsJobIntentService.Companion.ACTION_GEOFENCE_EVENT
 import com.udacity.locationreminder.locationreminders.reminderslist.ReminderDataItem
 import com.udacity.locationreminder.utils.setDisplayHomeAsUpEnabled
 import org.koin.android.ext.android.inject
@@ -40,7 +41,6 @@ class SaveReminderFragment : BaseFragment() {
         const val REQUEST_TURN_DEVICE_LOCATION_ON = 29
         const val REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE = 33
         const val REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE = 34
-        const val ACTION_GEOFENCE_EVENT = "SaveReminderFragment.project4.action.ACTION_GEOFENCE_EVENT"
     }
 
     //Get the view model this time as a single to be shared with the another fragment
