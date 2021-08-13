@@ -9,6 +9,7 @@ import com.udacity.locationreminder.locationreminders.data.FakeDataSource
 import com.udacity.locationreminder.locationreminders.reminderslist.ReminderDataItem
 import com.udacity.locationreminder.utils.MainCoroutineRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers.`is`
 import org.junit.After
@@ -47,7 +48,7 @@ class SaveReminderViewModelTest {
     }
 
     @Test
-    fun `on save Reminder _ check if the title is not empty`() {
+    fun `on save Reminder _ check if the title is not empty`() = mainCoroutineRule.runBlockingTest {
         //GIVEN
         val reminder = ReminderDataItem("", "description", "location", 123.456, 654.321, "id")
 
@@ -59,7 +60,7 @@ class SaveReminderViewModelTest {
     }
 
     @Test
-    fun `on save Reminder _ check if the description is not empty`() {
+    fun `on save Reminder _ check if the description is not empty`() = mainCoroutineRule.runBlockingTest {
         //GIVEN
         val reminder = ReminderDataItem("title", "", "location", 123.456, 654.321, "id")
 
@@ -71,7 +72,7 @@ class SaveReminderViewModelTest {
     }
 
     @Test
-    fun `on save Reminder _ check if the location is not empty`() {
+    fun `on save Reminder _ check if the location is not empty`() = mainCoroutineRule.runBlockingTest {
         //GIVEN
         val reminder = ReminderDataItem("title", "description", "", 123.456, 654.321, "id")
 

@@ -48,7 +48,7 @@ class RemindersListViewModelTest {
     }
 
     @Test
-    fun `on load Reminders _ save reminder`() = runBlockingTest {
+    fun `on load Reminders _ save reminder`() = mainCoroutineRule.runBlockingTest {
         // GIVEN
         val reminder = ReminderDTO("title", "description", "location", 123.456, 654.321, "id")
         reminderDataSource.saveReminder(reminder)
@@ -61,7 +61,7 @@ class RemindersListViewModelTest {
     }
 
     @Test
-    fun `on load Reminders _ show Error Message`() = runBlockingTest {
+    fun `on load Reminders _ show Error Message`() = mainCoroutineRule.runBlockingTest {
         //GIVEN
         reminderDataSource.shouldReturnError(true)
 
@@ -73,7 +73,7 @@ class RemindersListViewModelTest {
     }
 
     @Test
-    fun `on load Reminders _ no Data Result`() = runBlockingTest {
+    fun `on load Reminders _ no Data Result`() = mainCoroutineRule.runBlockingTest {
         //WHEN
         remindersListViewModel.loadReminders()
 
@@ -83,7 +83,7 @@ class RemindersListViewModelTest {
 
 
     @Test
-    fun `on load Reminders _ should loading appears`() = runBlockingTest {
+    fun `on load Reminders _ should loading appears`() = mainCoroutineRule.runBlockingTest {
         //WHEN
         mainCoroutineRule.pauseDispatcher()
         remindersListViewModel.loadReminders()
