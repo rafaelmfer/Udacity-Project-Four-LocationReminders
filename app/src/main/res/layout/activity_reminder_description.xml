@@ -10,7 +10,7 @@
             type="com.udacity.locationreminder.locationreminders.reminderslist.ReminderDataItem" />
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -19,15 +19,30 @@
         <!--TODO: add the design of the reminder details-->
 
         <TextView
+            android:id="@+id/reminder_title_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_normal"
+            android:layout_marginEnd="@dimen/margin_normal"
             android:gravity="center"
-            android:text="Reminder Details"
+            android:text="@{reminderDataItem.title}"
             android:textSize="@dimen/text_size_large"
+            app:layout_constraintBottom_toTopOf="@id/reminder_description_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/reminder_description_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_normal"
+            android:gravity="center"
+            android:text="@{reminderDataItem.description}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </LinearLayout>
+            app:layout_constraintTop_toBottomOf="@id/reminder_title_text" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
