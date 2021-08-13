@@ -47,7 +47,7 @@ class SaveReminderViewModelTest {
     }
 
     @Test
-    fun `on save Reminder _ check if the title matches `() {
+    fun `on save Reminder _ check if the title is not empty`() {
         //GIVEN
         val reminder = ReminderDataItem("", "description", "location", 123.456, 654.321, "id")
 
@@ -59,7 +59,7 @@ class SaveReminderViewModelTest {
     }
 
     @Test
-    fun `on save Reminder _ check if the description matches`() {
+    fun `on save Reminder _ check if the description is not empty`() {
         //GIVEN
         val reminder = ReminderDataItem("title", "", "location", 123.456, 654.321, "id")
 
@@ -71,7 +71,7 @@ class SaveReminderViewModelTest {
     }
 
     @Test
-    fun `on save Reminder _ check if the location matches`() {
+    fun `on save Reminder _ check if the location is not empty`() {
         //GIVEN
         val reminder = ReminderDataItem("title", "description", "", 123.456, 654.321, "id")
 
