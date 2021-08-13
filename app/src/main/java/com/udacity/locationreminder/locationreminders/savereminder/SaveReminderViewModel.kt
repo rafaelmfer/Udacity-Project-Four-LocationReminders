@@ -15,7 +15,7 @@ import java.util.UUID
 
 class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSource) : BaseViewModel(app) {
 
-    private val selectedPOI = MutableLiveData<PointOfInterest>()
+    val selectedPOI = MutableLiveData<PointOfInterest>()
     val reminderTitle = MutableLiveData<String>()
     val reminderDescription = MutableLiveData<String>()
     val reminderSelectedLocationStr = MutableLiveData<String>()

@@ -207,7 +207,7 @@ class SaveReminderFragment : BaseFragment() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             geofencingClient.addGeofences(geofencingRequest, geofencePendingIntent).run {
                 addOnSuccessListener {
-                    _viewModel.showSnackBar.postValue(getString(R.string.geofence_added))
+                    _viewModel.showSnackBar.postValue(activity?.application?.getString(R.string.geofence_added))
                     _viewModel.navigationCommand.value = NavigationCommand.Back
                 }
                 addOnFailureListener {
