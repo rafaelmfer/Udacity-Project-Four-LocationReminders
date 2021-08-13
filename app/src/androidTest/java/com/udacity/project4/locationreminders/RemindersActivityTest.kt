@@ -49,8 +49,6 @@ import org.koin.test.get
 //END TO END test to black box test the app
 class RemindersActivityTest : KoinTest {
 
-    // Extended Koin Test - embed autoclose @after method to close Koin after every test
-
     private lateinit var repository: ReminderDataSource
     private lateinit var viewModel: SaveReminderViewModel
     private lateinit var appContext: Application
@@ -60,12 +58,11 @@ class RemindersActivityTest : KoinTest {
     private lateinit var decorView: View
 
     @get:Rule
-    var locationPermission = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION)
+    var locationPermission: GrantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION)
 
     @get:Rule
-    var backgroundLocationPermission = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+    var backgroundLocationPermission: GrantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_BACKGROUND_LOCATION)
 
-    // An idling resource that waits for Data Binding to have no pending bindings.
     private val dataBindingIdlingResource = DataBindingIdlingResource()
 
     /**
@@ -131,8 +128,8 @@ class RemindersActivityTest : KoinTest {
 
     @Test
     fun addingAReminder_andStartReminderDescriptionActivity() {
-        val typingTitle = "Title espresso"
-        val typingDescription = "Description espresso"
+        val typingTitle = "Title"
+        val typingDescription = "Description"
         val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
         dataBindingIdlingResource.monitorActivity(activityScenario)
 
@@ -195,7 +192,7 @@ class RemindersActivityTest : KoinTest {
         viewModel.selectedPOI.postValue(PointOfInterest(LatLng(54.67575865, 2.75759986), "", "Somewhere"))
 
         // Typing description
-        onView(withId(R.id.reminderDescription)).perform(ViewActions.typeText("Description espresso"))
+        onView(withId(R.id.reminderDescription)).perform(ViewActions.typeText("Description"))
         closeSoftKeyboard()
 
         // Save reminder
@@ -224,7 +221,7 @@ class RemindersActivityTest : KoinTest {
         viewModel.selectedPOI.postValue(PointOfInterest(LatLng(54.67575865, 2.75759986), "", "Somewhere"))
 
         // Typing description
-        onView(withId(R.id.reminderTitle)).perform(ViewActions.typeText("Title espresso"))
+        onView(withId(R.id.reminderTitle)).perform(ViewActions.typeText("Title"))
         closeSoftKeyboard()
 
         // Save reminder
@@ -250,8 +247,8 @@ class RemindersActivityTest : KoinTest {
         onView(withId(R.id.addReminderFAB)).perform(ViewActions.click())
 
         // Typing title & description
-        onView(withId(R.id.reminderTitle)).perform(ViewActions.typeText("Title espresso"))
-        onView(withId(R.id.reminderDescription)).perform(ViewActions.typeText("Description espresso"))
+        onView(withId(R.id.reminderTitle)).perform(ViewActions.typeText("Title"))
+        onView(withId(R.id.reminderDescription)).perform(ViewActions.typeText("Description"))
         closeSoftKeyboard()
 
         // Save reminder
