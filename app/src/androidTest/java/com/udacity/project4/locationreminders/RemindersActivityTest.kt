@@ -9,6 +9,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers.Visibility
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
@@ -31,6 +32,7 @@ import com.udacity.project4.util.monitorActivity
 import com.udacity.project4.utils.EspressoIdlingResource
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -165,6 +167,11 @@ class RemindersActivityTest : KoinTest {
         onView(withText(typingTitle)).check(matches(isDisplayed()))
         onView(withText(typingDescription)).check(matches(isDisplayed()))
         onView(withText(selectedLocation)).check(matches(isDisplayed()))
+
+        // Verify toast is shown correctly!
+        onView(withText(R.string.reminder_saved))
+            .inRoot(withDecorView(not(decorView)))
+            .check(matches(isDisplayed()))
 
         onView(withId(R.id.addReminderFAB)).perform(ViewActions.click())
         // Verify snack is shown correctly!
