@@ -166,6 +166,11 @@ class RemindersActivityTest : KoinTest {
         onView(withText(typingDescription)).check(matches(isDisplayed()))
         onView(withText(selectedLocation)).check(matches(isDisplayed()))
 
+        onView(withId(R.id.addReminderFAB)).perform(ViewActions.click())
+        // Verify snack is shown correctly!
+        onView(withId(com.google.android.material.R.id.snackbar_text))
+            .check(matches(withText(R.string.geofence_added)))
+
         // Click on that item
         onView(withText(typingTitle)).perform(ViewActions.click())
 
