@@ -44,7 +44,7 @@ import org.koin.core.context.stopKoin
 import org.koin.dsl.module
 import org.koin.test.KoinTest
 import org.koin.test.get
-
+import org.robolectric.annotation.Config
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
@@ -129,6 +129,7 @@ class RemindersActivityTest : KoinTest {
     }
 
     @Test
+    @Config
     fun addingAReminder_andStartReminderDescriptionActivity() {
         val typingTitle = "Title"
         val typingDescription = "Description"

@@ -33,9 +33,10 @@ class GeofenceTransitionsJobIntentService : JobIntentService(), CoroutineScope {
     }
 
     override fun onHandleWork(intent: Intent) {
-
         if (intent.action == ACTION_GEOFENCE_EVENT) {
+
             val geofencingEvent = GeofencingEvent.fromIntent(intent)
+
             if (geofencingEvent.hasError()) {
                 Log.e(TAG, geofencingEvent.errorCode.toString())
                 return
@@ -69,7 +70,6 @@ class GeofenceTransitionsJobIntentService : JobIntentService(), CoroutineScope {
 
         CoroutineScope(coroutineContext).launch(SupervisorJob()) {
             val result = remindersLocalRepository.getReminder(requestId)
-
 
             if (result is Result.Success<ReminderDTO>) {
 
