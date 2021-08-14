@@ -14,7 +14,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.common.api.ResolvableApiException
@@ -37,7 +36,6 @@ import com.udacity.project4.locationreminders.geofence.GeofenceTransitionsJobInt
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
 import org.koin.android.ext.android.inject
-import java.util.concurrent.TimeUnit
 
 @SuppressLint("UnspecifiedImmutableFlag")
 class SaveReminderFragment : BaseFragment() {
@@ -158,7 +156,7 @@ class SaveReminderFragment : BaseFragment() {
             }
             else -> REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
         }
-        ActivityCompat.requestPermissions(requireActivity(), permissionArray, resultCode)
+        requestPermissions(permissionArray, resultCode)
     }
 
     private fun checkPermissionsAndStartGeofencing(reminderDataItem: ReminderDataItem) {
@@ -195,8 +193,7 @@ class SaveReminderFragment : BaseFragment() {
             ?.addOnFailureListener { exception ->
                 if (exception is ResolvableApiException && resolve) {
                     try {
-                        activity?.let { exception.startResolutionForResult(it, REQUEST_TURN_DEVICE_LOCATION_ON) }
-
+                        startIntentSenderForResult(exception.resolution.intentSender, REQUEST_TURN_DEVICE_LOCATION_ON, null, 0, 0, 0, null)
                     } catch (ex: IntentSender.SendIntentException) {
                         ex.printStackTrace()
                         Log.i("warning", "Error getting location settings resolution" + ex.message)
@@ -218,7 +215,7 @@ class SaveReminderFragment : BaseFragment() {
         val geoFence = Geofence.Builder()
             .setRequestId(reminderDataItem.id)
             .setCircularRegion(reminderDataItem.latitude!!, reminderDataItem.longitude!!, 200f)
-            .setExpirationDuration(TimeUnit.HOURS.toMillis(2))
+            .setExpirationDuration(Geofence.NEVER_EXPIRE)
             .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
             .build()
 
