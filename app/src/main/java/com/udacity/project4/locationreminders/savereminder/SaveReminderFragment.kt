@@ -3,17 +3,20 @@ package com.udacity.project4.locationreminders.savereminder
 import android.Manifest
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
+import android.app.AlertDialog
 import android.app.PendingIntent
 import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -56,7 +59,7 @@ class SaveReminderFragment : BaseFragment() {
 
     private lateinit var geofencingClient: GeofencingClient
 
-    private val runningQOrLater = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q
+    private val runningQOrLater = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
     private val geofencePendingIntent: PendingIntent by lazy {
         PendingIntent.getBroadcast(
@@ -78,6 +81,7 @@ class SaveReminderFragment : BaseFragment() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -145,6 +149,47 @@ class SaveReminderFragment : BaseFragment() {
         return foregroundLocationApproved && backgroundPermissionApproved
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun checkLocationPermission() {
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                AlertDialog.Builder(context)
+                    .setTitle("Location Permission Needed")
+                    .setMessage("This app needs the Location permission, please accept to use location functionality")
+                    .setPositiveButton(android.R.string.ok) { _, _ ->
+                        //Prompt the user once explanation has been shown
+                        requestLocationPermission()
+                    }
+                    .create()
+                    .show()
+            } else {
+                // No explanation needed, we can request the permission.
+                requestLocationPermission()
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun requestLocationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION),
+                REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE
+            )
+        } else {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
+            )
+        }
+    }
+
     @TargetApi(29)
     private fun requestForegroundAndBackgroundLocationPermissions() {
         if (foregroundAndBackgroundLocationPermissionApproved()) return
@@ -161,11 +206,13 @@ class SaveReminderFragment : BaseFragment() {
         ActivityCompat.requestPermissions(requireActivity(), permissionArray, resultCode)
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     private fun checkPermissionsAndStartGeofencing(reminderDataItem: ReminderDataItem) {
         if (foregroundAndBackgroundLocationPermissionApproved()) {
             checkDeviceLocationSettingsAndStartGeofence(resolve = true, reminderDataItem = reminderDataItem)
         } else {
-            requestForegroundAndBackgroundLocationPermissions()
+//            requestForegroundAndBackgroundLocationPermissions()
+            checkLocationPermission()
         }
     }
 
